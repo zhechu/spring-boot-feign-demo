@@ -1,0 +1,43 @@
+server:
+  port: 8082
+spring:
+  application:
+    name: spring-boot-feign-consumer
+
+eureka:
+  client:
+    service-url:
+      # 指定eureka server通信地址，注意/eureka/小尾巴不能少
+      defaultZone: http://admin:123456@127.0.0.1:8761/eureka/
+  instance:
+    # 是否注册 IP 到 eureka server，如不指定或设为 false，那就会注册主机名到 eureka server
+    prefer-ip-address: true
+
+# 指定 Feign 日志打印级别
+logging:
+  level:
+    com.wise.feign.UserFeignClient: debug
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        # 配置 Feign 的日志级别
+        loggerLevel: full
+
+# 自定义属性
+application:
+  service:
+    spring-boot-feign-provider:
+      name: spring-boot-feign-provider
+      # 可为空，若指定 url 则会固定负载到其指定节点
+      url:
+
+ribbon:
+  eager-load:
+    # 开启 Ribbon 的饥饿加载模式
+    enabled: true
+    # 指定需要饥饿加载的客户端名称、服务名
+    clients: ${application.service.spring-boot-feign-provider.name}
